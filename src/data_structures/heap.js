@@ -10,8 +10,8 @@ class MaxHeap {
   constructor({ size = this.constructor.DEFAULT_SIZE, fromArray } = {}) {
     if (fromArray) {
       this._storage = fromArray;
-      this._size = fromArray.length - 1;
-      this._count = this._size;
+      this.size = fromArray.length - 1;
+      this._count = this.size;
       this._buildheap();
 
     } else {
