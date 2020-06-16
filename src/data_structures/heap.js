@@ -62,15 +62,49 @@ class MaxHeap {
   }
 
   _float(i) {
-    // TODO
+    let parentIndex = this._parent(i);
+
+    while (this._storage[parentIndex] && (this._storage[i].priority > this._storage[parentIndex].priority)) {
+      this._swap(i, parentIndex);
+      i = parentIndex;
+      parentIndex = this._parent(i);
+    }
   }
 
   _sink(i) {
-    // TODO
+    let finished = false;
+    while (!finished) {
+      let recordPriority  = this._storage[i].priority;
+
+      let leftIndex = this._left(i);
+      let rightIndex = this._right(i);
+
+      let validLeftPriority = leftIndex <= this._count && this._storage[leftIndex].priority ? this._storage[leftIndex].priority : 0;
+      let validRightPriority = rightIndex <= this._count && this._storage[rightIndex].priority ? this._storage[rightIndex].priority : 0;
+
+      if (validLeftPriority > validRightPriority) {
+        if (recordPriority < validLeftPriority) {
+          this._swap(i, leftIndex);
+          i = leftIndex;
+        } else {
+          finished = true;
+        }
+      } else {
+        if (recordPriority < validRightPriority) {
+          this._swap(i, rightIndex);
+          i = rightIndex;
+        } else {
+          finished = true;
+        }
+      }
+    }
   }
 
   _buildheap() {
-    // TODO
+    const mid = Math.floor(this.size / 2);
+    for (let i = mid; i > 0; i -= 1) {
+      this._sink(i);
+    }
   }
 
   /**
@@ -81,7 +115,15 @@ class MaxHeap {
    * @throws If the heap is full
    */
   insert(priority, element) {
-    // TODO
+    if (this._count >= this.size) {
+      throw new Error("no more for me thanks i'm full");
+    }
+    this._count += 1;
+    let record = { priority, element };
+    let childIndex = this._count;
+    this._storage[childIndex] = record;
+
+    this._float(childIndex);
   }
 
   /**
@@ -91,6 +133,15 @@ class MaxHeap {
    */
   removeMax() {
     // TODO
+    if (this._count === 0) return;
+
+    if (this._storage[1].element || this._storage[1].element === 0) {
+      let deletedMaxElement = this._storage[1].element;
+        this._swap(1, this._count);
+        this._count -= 1;
+        this._sink(1);
+      return deletedMaxElement;
+    }
   }
 
   /** 
@@ -112,6 +163,12 @@ class MaxHeap {
    */
   sort() {
     // TODO
+    for (let i = this._count; i > 0; i--) {
+      this._swap(1, this._count);
+      this._count -= 1;
+      this._sink(1);
+    }
+    return this._storage;
   }
 }
 
